@@ -1,12 +1,12 @@
 #-include .env
- 
+
 VERSION := $(shell git describe --tags)
 BUILD := $(shell git rev-parse --short HEAD)
 BIN_OUTPUT ?= bin/distribyted-$(VERSION)-`go env GOOS`-`go env GOARCH``go env GOEXE`
 PROJECTNAME := $(shell basename "$(PWD)")
 
 # Use linker flags to provide version/build settings
-LDFLAGS=-X=main.Version=$(VERSION) -X=main.Build=$(BUILD) -linkmode static
+LDFLAGS=-X=main.Version=$(VERSION) -X=main.Build=$(BUILD) -linkmode external -extldflags "-static"
 
 # Make is verbose in Linux. Make it silent.
 MAKEFLAGS += --silent
@@ -28,7 +28,7 @@ test:
 
 go-build:
 	@echo "  >  Building binary on $(BIN_OUTPUT)..."
-	go build -o $(BIN_OUTPUT) -tags "release" -ldflags='$(LDFLAGS)' cmd/distribyted/main.go
+	CGO_ENABLED=0 go build -o $(BIN_OUTPUT) -tags "release" -ldflags='$(LDFLAGS)' cmd/distribyted/main.go
 
 go-generate:
 	@echo "  >  Generating code files..."
