@@ -6,7 +6,7 @@ BIN_OUTPUT ?= bin/distribyted-$(VERSION)-`go env GOOS`-`go env GOARCH``go env GO
 PROJECTNAME := $(shell basename "$(PWD)")
 
 # Use linker flags to provide version/build settings
-LDFLAGS=-X=main.Version=$(VERSION) -X=main.Build=$(BUILD) -linkmode external -extldflags "-static"
+LDFLAGS=-X main.Version=$(VERSION) -X main.Build=$(BUILD) -extldflags "-static"
 
 # Make is verbose in Linux. Make it silent.
 MAKEFLAGS += --silent
@@ -28,7 +28,7 @@ test:
 
 go-build:
 	@echo "  >  Building binary on $(BIN_OUTPUT)..."
-	CGO_ENABLED=0 go build -o $(BIN_OUTPUT) -tags "release" -ldflags='$(LDFLAGS)' cmd/distribyted/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(BIN_OUTPUT) -tags "release" -ldflags='$(LDFLAGS)' cmd/distribyted/main.go
 
 go-generate:
 	@echo "  >  Generating code files..."
