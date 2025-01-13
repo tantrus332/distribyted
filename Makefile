@@ -1,5 +1,5 @@
 #-include .env
-
+ 
 VERSION := $(shell git describe --tags)
 BUILD := $(shell git rev-parse --short HEAD)
 BIN_OUTPUT ?= bin/distribyted-$(VERSION)-`go env GOOS`-`go env GOARCH``go env GOEXE`
